@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<script src="jquery.js"></script>
+	<script src="bootstrap.min.js"></script>
+	<script src="popup.js"></script>
+</head>
+<style>
+	body {
+		min-width: 400px;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">차단 유저 추가하기</div>
+			<div class="panel-body">
+				<p>
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="닉네임 입력" id="nicktext">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="submit">추가하기</button>
+						</span>
+					</div>
+				</p>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">차단된 유저 목록</div>
+			<div class="panel-body">
+				<p>
+					<ul class="list-group" id="bannednick">
+						
+					</ul>
+				</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

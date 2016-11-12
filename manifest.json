@@ -1,0 +1,24 @@
+{
+   "background": {
+      "scripts": [ "database.js" ]
+   },
+   "browser_action": {
+      "browser_style": true,
+      "default_popup": "popup/popup.html",
+      "default_title": "FMK User Blocker"
+   },
+   "content_scripts": [ {
+      "js": [ "jquery.js", "block.js" ],
+      "matches": [ "http://*.fmkorea.com/*" ],
+      "run_at": "document_end"
+   } ],
+   "icons": {
+      "128": "icon128.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0Sae3bXCHW9ivWXECjcBtrewSqUfooE+q5qm8ADFyKO3/kgvOwFDTKZTrz8TxkbG/vSczaLTiililEkH4/k4pN97E9SGUA5aHXSwxjMS5coitp+B/K+QG2qCHh9x6teaGql2ZARlB2HSjBU4OYkCmfPxToG1uJ6qla7Q+Sk3l0FwtjhoCUp3rlZfADhMOR0UmutjqI9Ka1fAJlZDQa6XnBqwSwKmT0xe7SCaiSHBO7LsiGP12I3KW+g5qiMg/iWTTVTw0Oi4IGFNpQEj3Qrxtup8HEda2S8J3pD+oS82BYEBN5CIS+Q1lsq0YsvqcZK5gGxEq+nz0jrEVhYCc8EgGwIDAQAB",
+   "manifest_version": 2,
+   "name": "FMK User Blocker",
+   "permissions": [ "tabs", "\u003Call_urls>", "contextMenus" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "0.3"
+}
