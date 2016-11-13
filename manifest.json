@@ -1,6 +1,6 @@
 {
    "background": {
-      "scripts": [ "database.js" ]
+      "scripts": [ "database.js"]
    },
    "browser_action": {
       "browser_style": true,
@@ -8,7 +8,7 @@
       "default_title": "FMK User Blocker"
    },
    "content_scripts": [ {
-      "js": [ "jquery.js", "block.js" ],
+      "js": [ "jquery.js", "block.js"],
       "matches": [ "http://*.fmkorea.com/*" ],
       "run_at": "document_end"
    } ],
@@ -20,5 +20,5 @@
    "name": "FMK User Blocker",
    "permissions": [ "tabs", "\u003Call_urls>", "contextMenus" ],
    "update_url": "https://clients2.google.com/service/update2/crx",
-   "version": "0.3"
+   "version": "0.4"
 }

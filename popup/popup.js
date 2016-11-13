@@ -2,7 +2,7 @@ var db = openDatabase("BlockNickDB", "1.0", "Nickname Database", "5*1024*1024");
 
 function load_list() {
     chrome.runtime.sendMessage({
-        "serv": "ban", 
+        "serv": "ban",
         "cmd": "load"
     }, function(response) {
         console.log(response);
@@ -25,7 +25,7 @@ function load_list() {
                         "cmd" : "delete",
                         "row_id" : id
                     }, function(response) {
-                        if(response.success) 
+                        if(response.success)
                             alert("성공적으로 제거되었습니다.");
                         else
                             alert("실패하였습니다.\n" + response.error);
@@ -34,10 +34,10 @@ function load_list() {
                 });
                 component.appendChild(rem_button);
                 document.getElementById("bannednick").appendChild(component);
-            }    
+            }
         } else
             console.log("failed to access db\n" + response.error);
-        
+
     });
 }
 
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     button.addEventListener('click', function() {
         var targetnick = document.getElementById('nicktext').value;
         chrome.runtime.sendMessage({
-            "serv" : "ban", 
+            "serv" : "ban",
             "cmd" : "save",
             "user_id" : targetnick
         }, function(response) {
