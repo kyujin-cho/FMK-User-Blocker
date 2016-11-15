@@ -59,9 +59,26 @@ chrome.contextMenus.create({
 						});
 						break;
 					}
-    			} else if(request.serv == 'memo')
+				} else if(request.serv == 'memo') {
     				console.log('memo');
-
+				}	else if(request.serv == 'patch') {
+						switch (request.type) {
+							case 'vote':
+								if(request.cmd == 'save'){
+									window.localStorage.setItem("vote_patch", request.enabled);
+									sendResponse({
+										"success" : true
+									});
+								}
+								else if(request.cmd == 'load') {
+									sendResponse({
+										"success" : true,
+										"enabled" : window.localStorage.getItem("vote_patch")
+									});
+								}
+							break;
+						}
+					}
     	});
     chrome.runtime.onMessageExternal.addListener(
 		function (req, sender, sendResp) {

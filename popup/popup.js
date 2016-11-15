@@ -58,6 +58,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('nicktext').value = "";
         load_list();
     });
+    var vote_patch = document.getElementById('vote_patch');
+    chrome.runtime.sendMessage({
+      "serv" : "patch",
+      "cmd" : "load",
+      "type" : "vote"
+    }, function (response) {
+      vote_patch.setAttribute("checked", response.enabled)
+    })
+    vote_patch.addEventListener('click', function () {
+      chrome.runtime.sendMessage({
+        "serv" : "patch",
+        "cmd" : "save",
+        "type" : "vote",
+        "enabled" : vote_patch.checked
+      }, function (response) {
+        if(response.success)
+          alert("저장되었습니다. 페이지를 새로고침 해 주세요.");
+        else
+          alert("실패하였습니다.\n" + error);
+      })
+    })
 });
 
 function onWindowLoad() {
