@@ -37,7 +37,6 @@ function load_list() {
             }
         } else
             console.log("failed to access db\n" + response.error);
-
     });
 }
 
@@ -45,16 +44,25 @@ document.addEventListener('DOMContentLoaded', function() {
     var button = document.getElementById('submit');
     button.addEventListener('click', function() {
         var targetnick = document.getElementById('nicktext').value;
-        chrome.runtime.sendMessage({
-            "serv" : "ban",
-            "cmd" : "save",
-            "user_id" : targetnick
-        }, function(response) {
-            if(response.success)
-                alert("저장되었습니다.");
-            else
-                alert("실패하였습니다. \n" + error);
-        });
+        if(targetnick == "!enable hidden feature for fmkorea.com!")
+          chrome.runtime.sendMessage({
+            "serv" : "easter", 
+            "cmd" : "save"
+          }, function(response) {
+            if(!response.success)
+              alert('실패하였습니다.');
+          });
+        else
+          chrome.runtime.sendMessage({
+              "serv" : "ban",
+              "cmd" : "save",
+              "user_id" : targetnick
+          }, function(response) {
+              if(response.success)
+                  alert("저장되었습니다.");
+              else
+                  alert("실패하였습니다. \n" + error);
+          });
         document.getElementById('nicktext').value = "";
         load_list();
     });
@@ -64,7 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
       "cmd" : "load",
       "type" : "vote"
     }, function (response) {
-      vote_patch.setAttribute("checked", response.enabled)
+      console.log('vote_patch : ' + response.enabled);
+      $('input:checkbox[id=\"vote_patch\"]').prop('checked', response.enabled);
     })
     vote_patch.addEventListener('click', function () {
       chrome.runtime.sendMessage({
@@ -73,16 +82,88 @@ document.addEventListener('DOMContentLoaded', function() {
         "type" : "vote",
         "enabled" : vote_patch.checked
       }, function (response) {
-        if(response.success)
-          alert("저장되었습니다. 페이지를 새로고침 해 주세요.");
-        else
+        if(!response.success)
           alert("실패하였습니다.\n" + error);
       })
     })
+    var egg_patch = document.getElementById('egg_patch');
+    chrome.runtime.sendMessage({
+      "serv" : "patch",
+      "cmd" : "load",
+      "type" : "egg"
+    }, function (response) {
+      console.log('egg_patch : ' + response.enabled);
+      $('input:checkbox[id=\"egg_patch\"]').prop('checked', response.enabled);
+    })
+    egg_patch.addEventListener('click', function () {
+      chrome.runtime.sendMessage({
+        "serv" : "patch",
+        "cmd" : "save",
+        "type" : "egg",
+        "enabled" : egg_patch.checked
+      }, function (response) {
+        if(!response.success)
+          alert("실패하였습니다.\n" + error);
+      })
+    })
+    var con_patch = document.getElementById('con_patch');
+    chrome.runtime.sendMessage({
+      "serv" : "patch",
+      "cmd" : "load",
+      "type" : "con"
+    }, function (response) {
+      if(response.enabled != null)
+      console.log('con_patch : ' + response.enabled);
+        $('input:checkbox[id=\"con_patch\"]').prop('checked', response.enabled);
+      
+    })
+    con_patch.addEventListener('click', function () {
+      chrome.runtime.sendMessage({
+        "serv" : "patch",
+        "cmd" : "save",
+        "type" : "con",
+        "enabled" : con_patch.checked
+      }, function (response) {
+        if(!response.success)
+          alert("실패하였습니다.\n" + error);
+      })
+    })
+    var image_patch = document.getElementById('image_patch');
+    chrome.runtime.sendMessage({
+      "serv" : "patch",
+      "cmd" : "load",
+      "type" : "image"
+    }, function (response) {
+      if(response.enabled != null)
+      console.log('image_patch : ' + response.enabled);
+        $('input:checkbox[id=\"image_patch\"]').prop('checked', response.enabled);
+      
+    })
+    image_patch.addEventListener('click', function () {
+      chrome.runtime.sendMessage({
+        "serv" : "patch",
+        "cmd" : "save",
+        "type" : "image",
+        "enabled" : image_patch.checked
+      }, function (response) {
+        if(!response.success)
+          alert("실패하였습니다.\n" + error);
+      })
+    })
+
 });
 
 function onWindowLoad() {
-    load_list();
+  chrome.runtime.sendMessage({
+    'serv' : 'easter',
+    'cmd' : 'load'
+  }, function(response) {
+    console.log('easter: ' + response.enabled);
+    if(!response.enabled) {
+      $("p.easter").hide()
+    }
+  })
+  load_list();
 }
 
 window.onload = onWindowLoad;
