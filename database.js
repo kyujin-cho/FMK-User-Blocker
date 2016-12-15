@@ -21,6 +21,7 @@ chrome.contextMenus.create({
     chrome.runtime.onMessage.addListener(
     	function(request, sender, sendResponse) {
     		console.log("Listener Caught");
+
     		if(request.serv == 'ban') {
     			console.log('ban');
 				var list = JSON.parse(window.localStorage.getItem("nicklist"));
@@ -58,27 +59,41 @@ chrome.contextMenus.create({
 							"success" : true
 						});
 						break;
+				}
+			} else if(request.serv == 'memo') {
+				console.log('memo');
+			} else if(request.serv == 'patch') {
+				switch (request.cmd) {
+					case 'save':
+						window.localStorage.setItem(request.type + "_patch", request.enabled);
+						sendResponse({
+							"success" : true
+						});
+						break;
+					case 'load' :
+						sendResponse({
+							"success" : true,
+							"enabled" : (window.localStorage.getItem(request.type + "_patch") === "true")
+						});
+						break;
 					}
-				} else if(request.serv == 'memo') {
-    				console.log('memo');
-				}	else if(request.serv == 'patch') {
-						switch (request.type) {
-							case 'vote':
-								if(request.cmd == 'save'){
-									window.localStorage.setItem("vote_patch", request.enabled);
-									sendResponse({
-										"success" : true
-									});
-								}
-								else if(request.cmd == 'load') {
-									sendResponse({
-										"success" : true,
-										"enabled" : window.localStorage.getItem("vote_patch")
-									});
-								}
-							break;
-						}
-					}
+			} else if(request.serv == 'easter') {
+				switch(request.cmd) {
+					case 'save' :
+						var easter = (window.localStorage.getItem("easter_patch") === "true")
+						window.localStorage.setItem("easter_patch", !easter);
+						sendResponse({
+							'success' : true
+						});
+						break;
+					case 'load':
+						sendResponse({
+							'success' : true,
+							'enabled' : (window.localStorage.getItem("easter_patch") === "true")
+						});
+						break;
+				}
+			}
     	});
     chrome.runtime.onMessageExternal.addListener(
 		function (req, sender, sendResp) {

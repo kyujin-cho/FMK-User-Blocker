@@ -1,9 +1,4 @@
-function block(nicks) {
-	var target_post = $("table.bd_lst.bd_tb_lst.bd_tb > tbody > tr")
-	var target_reply = $("ul.fdb_lst_ul  > li")
-	var count = 0
-	var nick_list = new Array()
-	var reload_script = `
+var reload_script = `
 	function insert_comment(form) {
   var a = null
   a = legacy_filter('insert_comment', form, 'board', 'procBoardInsertComment', completeInsertComment, ['error', 'message', 'mid', 'document_srl', 'comment_srl', 'comment_page'], '', {})
@@ -32,11 +27,16 @@ function delete_comment(params) {
     location.reload();
   });
 }`
-	var delete_script = `$("#li.fdb_itm").on("remove", function () {
-	  location.reload();
-	})`
+var delete_script = `$("#li.fdb_itm").on("remove", function () {
+  location.reload();
+})`
 
 
+function block(nicks) {
+	var target_post = $("table.bd_lst.bd_tb_lst.bd_tb > tbody > tr")
+	var target_reply = $("ul.fdb_lst_ul  > li")
+	var count = 0
+	var nick_list = new Array()
 
 	$('head').append('<script type="text/javascript">\n' + reload_script + '\n</script>')
 	$('head').append('<script type="text/javascript" src="http://code.jquery.com/ui/1.12.1/jquery-ui.js" />')
@@ -58,11 +58,6 @@ function delete_comment(params) {
 			var reply_class = obj.attr('class')
 			var reply_id = obj.attr('id')
 			var reply_style = obj.attr('style')
-			// console.log('<li id="' + reply_id + '" class="' + reply_class + '" style= "' + reply_style + '">' +
-			// 			'<div class=\"meta\" style="display: none;\"\"><a>' + reply.text() + "</a></div>" +
-			// 			'<font color="red">차단된 댓글입니다.</font>' +
-			// 			'</li>')
-			//
 			$('ul.fdb_lst_ul > li').eq(i).replaceWith('<li id="' + reply_id + '" class="' + reply_class + '" style= "' + reply_style + '">' +
 							'<div class="meta" style="display: none;""><a>' + reply.text() + "</a></div>" +
 							'<font color="red">차단된 댓글입니다.</font>' +
@@ -110,6 +105,47 @@ function vote_patch() {
 	$('head').append('<style type="text/css">' + css + '</style>')
 }
 
+function egg_patch() {
+	var images = $("table.bd_lst.bd_tb_lst.bd_tb > tbody > tr > td.author > span > a > img")
+	var reply_images = $("div#cmtPosition > ul.fdb_lst_ul > li.fdb_itm.clear > div.meta > a > img")
+	for(var i = 0; i < images.length; i++){
+		if(images.eq(i).attr('src').startsWith('//image.fmkorea.com/modules/point/icons/fmkorea/')) {
+			images.eq(i).attr('src', '//image.fmkorea.com/modules/point/icons/fmkorea/1.gif')
+		}
+	}
+	for(var i = 0; i < reply_images.length; i++) {
+		if(reply_images.eq(i).attr('src').startsWith('//image.fmkorea.com/modules/point/icons/fmkorea/'))
+			reply_images.eq(i).attr('src', '//image.fmkorea.com/modules/point/icons/fmkorea/1.gif')
+	}
+}
+
+function con_patch() {
+	var images = $("table.bd_lst.bd_tb_lst.bd_tb > tbody > tr > td.author > span > a > img")
+	var reply_images = $("div#cmtPosition > ul.fdb_lst_ul > li.fdb_itm.clear > div.meta > a > img")
+	for(var i = 0; i < images.length; i++){
+		if(images.eq(i).attr('src').startsWith('//image.fmkorea.com/filesn/member_extra_info/')) 
+			images.eq(i).remove()
+	}
+	for(var i = 0; i < reply_images.length; i++) {
+		if(reply_images.eq(i).attr('src').startsWith('//image.fmkorea.com/filesn/member_extra_info/'))
+			reply_images.eq(i).remove()
+	}
+}
+
+function image_patch() {
+	var reply_contents = $("div#cmtPosition > ul.fdb_lst_ul > li.fdb_itm.clear > div > div.xe_content > a")
+	
+	for(var i = 0; i < reply_contents.length; i++) {
+		if((reply_contents.eq(i).attr('href').startsWith('http://') ||
+				reply_contents.eq(i).attr('href').startsWith('https://')) && 
+			(reply_contents.eq(i).attr('href').endsWith('.jpg') ||
+				reply_contents.eq(i).attr('href').endsWith('.png') ||
+				reply_contents.eq(i).attr('href').endsWith('.gif') || 
+				reply_contents.eq(i).attr('href').endsWith('.bmp'))) {
+			reply_contents.eq(i).html('<p><a href="' + reply_contents.eq(i).attr('href') + '"><img src="' + reply_contents.eq(i).attr('href') + '" style="width: 80%;"></a></p>');
+		}
+	}
+}
 
 
 chrome.runtime.sendMessage({
@@ -123,8 +159,41 @@ chrome.runtime.sendMessage({
 chrome.runtime.sendMessage({
 	'serv' : 'patch',
 	'cmd' : 'load',
-	'type' : 'vote'
+	'type' : 'egg'
 }, function (response) {
 	if(response.success && response.enabled)
+		egg_patch();
+	console.log('egg_patch: ' + response.enabled);
+})
+
+chrome.runtime.sendMessage({
+	'serv' : 'patch',
+	'cmd' : 'load',
+	'type' : 'con'
+}, function (response) {
+	if(response.success && response.enabled)
+		con_patch();
+	console.log('con_patch: ' + response.enabled);
+})
+
+chrome.runtime.sendMessage({
+	'serv' : 'patch',
+	'cmd' : 'load',
+	'type' : 'image'
+}, function (response) {
+	if(response.success && response.enabled)
+		image_patch();
+	console.log('image_patch: ' + response.enabled);
+})
+
+
+chrome.runtime.sendMessage({
+	'serv' : 'patch',
+	'cmd' : 'load',
+	'type' : 'vote'
+}, function (response) {
+	if(response.success && response.enabled) {
+		console.log('enabled')
 		vote_patch()
+	}
 })
