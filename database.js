@@ -21,8 +21,21 @@ chrome.contextMenus.create({
     chrome.runtime.onMessage.addListener(
     	function(request, sender, sendResponse) {
     		console.log("Listener Caught");
-
-    		if(request.serv == 'ban') {
+    		if(request.serv == 'all') {
+				var list = JSON.parse(window.localStorage.getItem("nicklist"));
+				var egg = (window.localStorage.getItem("egg_patch") === "true");
+				var con = (window.localStorage.getItem("con_patch") === "true");
+				var image = (window.localStorage.getItem("image_patch") === "true");
+				var vote = (window.localStorage.getItem("vote_patch") === "true");
+				sendResponse({
+					"success" : true,
+					"list" : list,
+					"egg" : egg,
+					"con" : con,
+					"image" : image,
+					"vote" : vote
+				});
+    		} else if(request.serv == 'ban') {
     			console.log('ban');
 				var list = JSON.parse(window.localStorage.getItem("nicklist"));
 				if(list == null)

@@ -146,54 +146,20 @@ function image_patch() {
 		}
 	}
 }
-
-
 chrome.runtime.sendMessage({
-	'serv' : 'ban',
-	'cmd' : 'load'
+	'serv' : 'all'
 }, function(response) {
-	console.log('Message Fired');
-	block(response.list)
-})
-
-chrome.runtime.sendMessage({
-	'serv' : 'patch',
-	'cmd' : 'load',
-	'type' : 'egg'
-}, function (response) {
-	if(response.success && response.enabled)
-		egg_patch();
-	console.log('egg_patch: ' + response.enabled);
-})
-
-chrome.runtime.sendMessage({
-	'serv' : 'patch',
-	'cmd' : 'load',
-	'type' : 'con'
-}, function (response) {
-	if(response.success && response.enabled)
-		con_patch();
-	console.log('con_patch: ' + response.enabled);
-})
-
-chrome.runtime.sendMessage({
-	'serv' : 'patch',
-	'cmd' : 'load',
-	'type' : 'image'
-}, function (response) {
-	if(response.success && response.enabled)
-		image_patch();
-	console.log('image_patch: ' + response.enabled);
-})
-
-
-chrome.runtime.sendMessage({
-	'serv' : 'patch',
-	'cmd' : 'load',
-	'type' : 'vote'
-}, function (response) {
-	if(response.success && response.enabled) {
-		console.log('enabled')
-		vote_patch()
+	if(response.success) {
+		if(response.list != [])
+			block(response.list);
+		if(response.egg)
+			egg_patch();
+		if(response.con)
+			con_patch();
+		if(response.image)
+			image_patch();
+		if(response.vote)
+			vote_patch();
+		
 	}
 })
