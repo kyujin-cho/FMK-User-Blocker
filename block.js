@@ -147,7 +147,6 @@ function image_patch() {
 	}
 }
 
-
 chrome.runtime.sendMessage({
 	'serv' : 'ban',
 	'cmd' : 'load'

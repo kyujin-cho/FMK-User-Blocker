@@ -21,7 +21,6 @@ chrome.contextMenus.create({
     chrome.runtime.onMessage.addListener(
     	function(request, sender, sendResponse) {
     		console.log("Listener Caught");
-
     		if(request.serv == 'ban') {
     			console.log('ban');
 				var list = JSON.parse(window.localStorage.getItem("nicklist"));
